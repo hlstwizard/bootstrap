@@ -1,0 +1,48 @@
+# ~/.config/starship.toml
+# Starship cross-shell prompt — https://starship.rs/config/
+
+"$schema" = "https://starship.rs/config-schema.json"
+
+format = """
+$directory\
+$git_branch\
+$git_status\
+$python\
+$nodejs\
+$rust\
+$golang\
+$cmd_duration\
+$line_break\
+$character"""
+
+[directory]
+truncation_length = 3
+truncate_to_repo  = true
+
+[git_branch]
+symbol = " "
+
+[git_status]
+ahead  = "⇡${count}"
+behind = "⇣${count}"
+staged = "[+${count}](green)"
+
+[python]
+symbol = " "
+
+[nodejs]
+symbol = " "
+
+[rust]
+symbol = " "
+
+[golang]
+symbol = " "
+
+[cmd_duration]
+min_time = 2000
+format   = "took [$duration](yellow) "
+
+[character]
+success_symbol = "[❯](green)"
+error_symbol   = "[❯](red)"

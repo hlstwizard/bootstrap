@@ -1,0 +1,27 @@
+[user]
+    # TODO: replace with your actual name and email
+    name = Your Name
+    email = you@example.com
+
+[core]
+    editor = nvim
+    autocrlf = input
+    pager = less -FX
+
+[init]
+    defaultBranch = main
+
+[pull]
+    rebase = false
+
+[push]
+    autoSetupRemote = true
+
+[alias]
+    st = status
+    co = checkout
+    br = branch
+    lg = log --oneline --graph --decorate --all
+
+[color]
+    ui = auto

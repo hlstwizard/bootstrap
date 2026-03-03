@@ -1,0 +1,9 @@
+# Ignore OS / editor noise
+.DS_Store
+Thumbs.db
+*.swp
+*.swo
+
+# Ignore sensitive files that should never be committed
+git/credentials
+fish/fish_history
