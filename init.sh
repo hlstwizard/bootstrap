@@ -15,7 +15,10 @@ moved aside to a timestamped .bak.<timestamp> path.
 EOF
 }
 
-if [[ ${1:-} == "-h" || ${1:-} == "--help" || ${1:-} == "" ]]; then
+if [[ ${1-} == "-h" || ${1-} == "--help" ]]; then
+  usage
+  exit 0
+elif [[ $# -eq 0 || ${1-} == "" ]]; then
   usage
   exit 1
 fi
