@@ -21,6 +21,14 @@
         "--rm",
         "ghcr.io/microsoft/mcp-dotnet-samples/awesome-copilot:latest"
       ]
+    },
+    "context7": {
+      "type": "local",
+      "command": [
+        "sh",
+        "-c",
+        "npx -y @upstash/context7-mcp --api-key $CONTEXT7_API_KEY"
+      ]
     }
   }
 }
