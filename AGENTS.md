@@ -2,17 +2,6 @@
 
 This repository is a mirror of `~/.config/` (XDG Base Directory layout) so it can be reused across machines.
 
-## Init
+For repository initialization instructions (including `init.sh`) and details about the OpenCode configuration location, see the top-level `README.md`.
 
-To link an app directory from this repo into the host config directory:
-
-```bash
-./init.sh opencode
-```
-
-This creates a symlink from `<repo>/opencode/` to `${XDG_CONFIG_HOME:-~/.config}/opencode`.
-If the destination already exists and isn't the desired symlink, it is moved aside to `*.bak.<timestamp>`.
-
-## OpenCode
-
-OpenCode configuration lives in `opencode/`.
+Use this file (`AGENTS.md`) for documenting agent-specific behavior and configuration.
