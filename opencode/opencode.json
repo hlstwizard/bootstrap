@@ -1,0 +1,26 @@
+{
+  "$schema": "https://opencode.ai/config.json",
+  "mcp": {
+    "azure": {
+      "type": "local",
+      "command": [
+        "uvx",
+        "--from",
+        "msmcp-azure",
+        "azmcp",
+        "server",
+        "start"
+      ]
+    },
+    "awesome-copilot": {
+      "type": "local",
+      "command": [
+        "docker",
+        "run",
+        "-i",
+        "--rm",
+        "ghcr.io/microsoft/mcp-dotnet-samples/awesome-copilot:latest"
+      ]
+    }
+  }
+}
