@@ -1,0 +1,2 @@
+# Editors
+alias vi="nvim"
