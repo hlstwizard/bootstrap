@@ -29,14 +29,14 @@ sh -c "$(curl -fsSL https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/too
 plugins=(git zsh-autosuggestions zsh-syntax-highlighting)
 ```
 
-4. Load custom aliases by symlinking the `zsh/` config directory and sourcing it in `~/.zshrc`:
+4. Load zsh configs by symlinking the `zsh/` config directory and sourcing all `*.zsh` files in `~/.zshrc`:
 
 ```bash
 ./init.sh zsh
 ```
 
 ```zsh
-source "${XDG_CONFIG_HOME:-$HOME/.config}/zsh/aliases.zsh"
+for f in "${XDG_CONFIG_HOME:-$HOME/.config}/zsh/"*.zsh; do source "$f"; done
 ```
 
 ## Input Method (Rime / Squirrel)
