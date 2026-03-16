@@ -67,6 +67,21 @@ cp -r ~/Library/CloudStorage/OneDrive-Personal/RimeSync/. ~/Library/Rime/
 
 > The Rime config folder defaults to `~/Library/Rime` on macOS.
 
+## Environment Variables
+
+Some tools require environment variables to be set. Add them to your shell config (e.g., `~/.zshrc` or a `zsh/*.zsh` file):
+
+| Variable | Used by | Purpose |
+|---|---|---|
+| `CONTEXT7_API_KEY` | Copilot, OpenCode | API key for the [Context7 MCP](https://context7.com/) server |
+
+```zsh
+export CONTEXT7_API_KEY="your-api-key"
+```
+
+- **Copilot** reads it via `copilot/mcp-config.json` (passed as an HTTP header to the Context7 MCP endpoint).
+- **OpenCode** reads it via `opencode/opencode.json` (passed to `npx @upstash/context7-mcp`).
+
 ## Configure Applications 
 
 This repository mirrors ~/.config/ and can be reused across different machines.

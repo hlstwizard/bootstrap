@@ -4,3 +4,10 @@
 # OS files
 .DS_Store
 Thumbs.db
+
+# Copilot temp files
+copilot/session-state/
+copilot/command-history-state.json
+copilot/config.json
+copilot/logs/
+copilot/pkg/

@@ -10,6 +10,7 @@ Example:
 
 This creates a symlink from this repo's <app>/ to $XDG_CONFIG_HOME/<app>
 (or ~/.config/<app> if XDG_CONFIG_HOME is not set).
+Exception: for 'copilot', the link target is ~/.copilot.
 If the destination already exists and is not the desired symlink, it will be
 moved aside to a timestamped .bak.<timestamp> path.
 EOF
@@ -33,10 +34,13 @@ if [[ ! -d "$src" ]]; then
   exit 2
 fi
 
-config_home="${XDG_CONFIG_HOME:-$HOME/.config}"
-dest="${config_home}/${app}"
-
-mkdir -p "$config_home"
+if [[ "$app" == "copilot" ]]; then
+  dest="$HOME/.copilot"
+else
+  config_home="${XDG_CONFIG_HOME:-$HOME/.config}"
+  dest="${config_home}/${app}"
+  mkdir -p "$config_home"
+fi
 
 src_abs="$(readlink -f "$src" 2>/dev/null || realpath "$src")"
 
