@@ -1,0 +1,45 @@
+Include /Users/yimhuang/.colima/ssh_config
+
+Host *
+ServerAliveInterval 120
+TCPKeepAlive no
+
+Host github.ihs.demonware.net
+IdentityFile ~/.ssh/id_ed25519
+
+Host github.com
+IdentityFile ~/.ssh/h.l.s.t
+
+Host github.com-hlstwizard
+HostName github.com
+IdentityFile ~/.ssh/h.l.s.t
+
+Host github.com-holsety
+HostName github.com
+IdentityFile ~/.ssh/id_ed25519
+
+Host testing
+User hlst
+HostName 20.2.192.170
+IdentityFile ~/.ssh/testing.pem
+Port 22
+
+Host bastion
+User hlst
+HostName 57.158.25.77
+IdentityFile ~/.ssh/id_ed25519
+
+
+Host testing-100
+HostName 20.2.192.170
+User hlst
+IdentityFile /Users/demonware/.ssh/id_ed25519
+
+Host mac-mini
+User huangyiming
+
+Host compute
+HostName compute
+User hlst
+IdentityFile ~/.ssh/id_ed25519
+ProxyJump bastion

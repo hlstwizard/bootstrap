@@ -22,6 +22,9 @@ brew "jq"
 brew "fzf"
 brew "mole"
 
+# GIT
+brew "git-crypt"
+
 # node
 brew "nvm"
 

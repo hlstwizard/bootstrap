@@ -10,7 +10,9 @@ Example:
 
 This creates a symlink from this repo's <app>/ to $XDG_CONFIG_HOME/<app>
 (or ~/.config/<app> if XDG_CONFIG_HOME is not set).
-Exception: for 'copilot', the link target is ~/.copilot.
+Exceptions:
+  - for 'copilot', the link target is ~/.copilot
+  - for 'ssh', the link target is ~/.ssh
 If the destination already exists and is not the desired symlink, it will be
 moved aside to a timestamped .bak.<timestamp> path.
 EOF
@@ -36,6 +38,8 @@ fi
 
 if [[ "$app" == "copilot" ]]; then
   dest="$HOME/.copilot"
+elif [[ "$app" == "ssh" ]]; then
+  dest="$HOME/.ssh"
 else
   config_home="${XDG_CONFIG_HOME:-$HOME/.config}"
   dest="${config_home}/${app}"

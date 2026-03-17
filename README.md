@@ -84,7 +84,7 @@ export CONTEXT7_API_KEY="your-api-key"
 
 ## Configure Applications 
 
-This repository mirrors ~/.config/ and can be reused across different machines.
+This repository primarily mirrors `~/.config/` and can be reused across different machines.
 
 Link an app directory from this repo into your host's config directory:
 
@@ -92,7 +92,14 @@ Link an app directory from this repo into your host's config directory:
 ./init.sh opencode
 ```
 
-This creates a symlink from `<repo>/opencode/` to `${XDG_CONFIG_HOME:-~/.config}/opencode`. If the destination already exists and isn't the desired symlink, it is moved aside to `*.bak.<timestamp>`.
+By default, this creates a symlink from `<repo>/<app>/` to `${XDG_CONFIG_HOME:-~/.config}/<app>`.
+
+Exceptions:
+
+- `copilot` links to `~/.copilot`
+- `ssh` links to `~/.ssh`
+
+If the destination already exists and isn't the desired symlink, it is moved aside to `*.bak.<timestamp>`.
 
 Example: OpenCode
 
