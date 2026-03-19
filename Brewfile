@@ -24,6 +24,7 @@ brew "mole"
 
 # GIT
 brew "git-crypt"
+brew "gh"
 
 # node
 brew "nvm"
