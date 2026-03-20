@@ -3,11 +3,21 @@ local wezterm = require("wezterm")
 
 local config = wezterm.config_builder()
 
+config.unix_domains = {
+	{
+		name = "unix",
+	},
+}
+
+config.default_gui_startup_args = { "connect", "unix" }
+
 config.leader = { key = "Space", mods = "ALT", timeout_milliseconds = 1000 }
 
 -- Basic: split window like iTerm (Cmd+d)
 config.keys = {
 	{ mods = "LEADER", key = "p", action = wezterm.action.PaneSelect },
+	{ key = "f", mods = "LEADER", action = wezterm.action.QuickSelect },
+	{ key = "x", mods = "LEADER", action = wezterm.action.ActivateCopyMode },
 	{
 		key = "d",
 		mods = "CMD",
@@ -24,17 +34,5 @@ config.keys = {
 		action = wezterm.action.CloseCurrentPane({ confirm = false }),
 	},
 }
-
-wezterm.on("gui-startup", function(cmd)
-	local screen = wezterm.gui.screens().active
-	local width = math.floor(screen.width / 2)
-	local height = screen.height
-	local x = screen.x + width
-	local y = screen.y
-
-	local _, _, window = wezterm.mux.spawn_window(cmd or {})
-	window:gui_window():set_position(x, y)
-	window:gui_window():set_inner_size(width, height)
-end)
 
 return config

@@ -25,7 +25,7 @@ IdentityFile ~/.ssh/id_ed25519
 
 Host openclaw-test
 User hlst
-HostName 40.83.97.133
+HostName 20.24.65.141
 IdentityFile ~/.ssh/hlstwizard
 
 Host mac-mini
