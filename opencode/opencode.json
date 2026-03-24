@@ -3,14 +3,7 @@
   "mcp": {
     "azure": {
       "type": "local",
-      "command": [
-        "uvx",
-        "--from",
-        "msmcp-azure",
-        "azmcp",
-        "server",
-        "start"
-      ]
+      "command": ["uvx", "--from", "msmcp-azure", "azmcp", "server", "start"]
     },
     "awesome-copilot": {
       "type": "local",
@@ -30,5 +23,8 @@
         "npx -y @upstash/context7-mcp --api-key $CONTEXT7_API_KEY"
       ]
     }
-  }
+  },
+  "plugin": [
+    "understand-anything@git+https://github.com/Lum1104/Understand-Anything.git"
+  ]
 }
