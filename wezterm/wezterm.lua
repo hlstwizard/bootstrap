@@ -18,6 +18,7 @@ config.keys = {
 	{ mods = "LEADER", key = "p", action = wezterm.action.PaneSelect },
 	{ key = "f", mods = "LEADER", action = wezterm.action.QuickSelect },
 	{ key = "x", mods = "LEADER", action = wezterm.action.ActivateCopyMode },
+	{ key = "r", mods = "LEADER", action = wezterm.action.ReloadConfiguration },
 	{
 		key = "d",
 		mods = "CMD",
