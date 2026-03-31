@@ -3,15 +3,40 @@
 ## Install Applications
 
 - Install brew from https://brew.sh/
-- Install the applications from brew using the brewfile:
+- Install the applications from brew using the brewfiles:
 
 ```bash
-brew bundle --file=Brewfile
+brew bundle --file=brewfiles/common.Brewfile
+brew bundle --file=brewfiles/macos.Brewfile
 ```
+
+Or use the helper script to auto-select by OS:
+
+```bash
+./bootstrap.sh
+```
+
+- macOS (`Darwin`) -> `brewfiles/macos.Brewfile`
+- Fedora Linux -> `brewfiles/fedora-dev.Brewfile`
+- `brewfiles/common.Brewfile` is always applied first
+
+- For a Fedora workstation (pure development profile), use:
+  (manual alternative to `./bootstrap.sh`)
+
+```bash
+brew bundle --file=brewfiles/common.Brewfile
+brew bundle --file=brewfiles/fedora-dev.Brewfile
+```
+
+Design notes:
+
+- Put shared tools in `brewfiles/common.Brewfile` (e.g., `fzf`).
+- Put OS-specific tools in profile files (`brewfiles/macos.Brewfile` for macOS, `brewfiles/fedora-dev.Brewfile` for Fedora).
+- If you want to replace a shared package later, update only `brewfiles/common.Brewfile`.
 
 Notes:
 
-- System utilities are managed in `Brewfile` (currently `stats`, `hiddenbar`, and `raycast`).
+- System utilities are managed in `brewfiles/macos.Brewfile` (currently `stats`, `hiddenbar`, and `raycast`).
 - `raycast` is used as the launcher/window-management tool.
 - Raycast config is stored in OneDrive; remember to back it up regularly.
 
@@ -49,7 +74,7 @@ This also loads `zsh/bracketed-paste.zsh`, which enables `bracketed-paste-magic`
 
 ## Input Method (Rime / Squirrel)
 
-1. Install [Squirrel](https://rime.im/) via Homebrew (included in Brewfile) or manually.
+1. Install [Squirrel](https://rime.im/) via Homebrew (included in `brewfiles/macos.Brewfile`) or manually.
 
 2. Install [rime-ice](https://github.com/iDvel/rime-ice) (雾凇拼音) using [Plum](https://github.com/rime/plum) (东风破):
 

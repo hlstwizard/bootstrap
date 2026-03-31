@@ -37,3 +37,9 @@ HostName compute
 User hlst
 IdentityFile ~/.ssh/id_ed25519
 ProxyJump bastion
+
+Host local_fedora
+HostName 192.168.64.2
+User hlst
+IdentityFile ~/.ssh/id_ed25519
+

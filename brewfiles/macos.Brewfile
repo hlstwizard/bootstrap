@@ -1,3 +1,5 @@
+# macOS-specific packages
+
 # yazi
 brew "yazi"
 brew "ffmpeg-full"
@@ -8,42 +10,22 @@ brew "resvg"
 brew "imagemagick-full"
 cask "font-symbols-only-nerd-font"
 
-# nvim
-brew "neovim"
-brew "luarocks"
-brew "ripgrep"
-brew "tree-sitter-cli"
-
 # terminal
-brew "zoxide"
 cask "wezterm"
-brew "git"
-brew "jq"
-brew "fzf"
 brew "mole"
 
-# GIT
-brew "git-crypt"
-brew "gh"
-
-# node
-brew "nvm"
-
+# Input and apps
 cask "squirrel-app"        # Rime (Squirrel) input method
 cask "microsoft-edge"
 cask "obsidian"
 
-# docker
+# docker runtime on macOS
 brew "colima"
-brew "docker"
 
 # System
 cask "stats"
 cask "hiddenbar"          # menu bar item manager
 cask "raycast"            # Launcher
-
-# Security
-brew "gnupg"
 
 # IM
 cask "slack"
