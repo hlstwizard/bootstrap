@@ -1,0 +1,19 @@
+[core]
+  autocrlf = input
+  eol = lf
+  excludesfile = ~/.gitignore_global
+  editor = nvim
+[init]
+  defaultBranch = main
+[pull]
+  rebase = false
+[fetch]
+  prune = true
+[rebase]
+  autoStash = true
+[push]
+  autoSetupRemote = true
+[merge]
+  conflictstyle = zdiff3
+[diff]
+  colorMoved = default

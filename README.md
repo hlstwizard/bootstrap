@@ -148,6 +148,25 @@ This symlinks the repo `ssh/` directory to `~/.ssh` so host aliases (for example
 
 If the destination already exists and isn't the desired symlink, it is moved aside to `*.bak.<timestamp>`.
 
+### Git Global Config
+
+Manage global Git config and ignore rules from this repo:
+
+```bash
+./init.sh git
+```
+
+This creates the following symlinks:
+
+- `git/.gitconfig` -> `~/.gitconfig`
+- `git/.gitignore_global` -> `~/.gitignore_global`
+
+Included defaults:
+
+- enforce Unix line endings (`core.eol=lf`, `core.autocrlf=input`)
+- global ignore file (`core.excludesfile=~/.gitignore_global`)
+- common quality-of-life settings (`fetch.prune`, `rebase.autoStash`, `push.autoSetupRemote`, etc.)
+
 Example: OpenCode
 
 OpenCode configuration lives in `opencode/`.
