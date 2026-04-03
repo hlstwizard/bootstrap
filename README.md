@@ -46,33 +46,23 @@ Notes:
 
 ## Set Up Zsh
 
-1. Install [Oh My Zsh](https://ohmyz.sh/):
-
-```bash
-sh -c "$(curl -fsSL https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/tools/install.sh)"
-```
-
-2. Install plugins:
-
-```bash
-./install-zsh-plugins.sh
-```
-
-3. Enable the plugins in `~/.zshrc` by updating the `plugins` line:
+1. Enable the plugins in `~/.zshrc` by updating the `plugins` line:
 
 ```zsh
-plugins=(git zsh-autosuggestions zsh-syntax-highlighting)
+plugins=(git zsh-autosuggestions zsh-syntax-highlighting zsh-fzf-history-search)
 ```
 
-4. Load zsh configs by symlinking the `zsh/` config directory and sourcing all `*.zsh` files in `~/.zshrc`:
+2. Load zsh configs and plugins via:
 
 ```bash
 ./init.sh zsh
 ```
 
-```zsh
-for f in "${XDG_CONFIG_HOME:-$HOME/.config}/zsh/"*.zsh; do source "$f"; done
-```
+`./init.sh zsh` now:
+
+- installs Oh My Zsh if missing (unattended)
+- clones common plugins into `${ZSH_CUSTOM:-~/.oh-my-zsh/custom}/plugins`
+- symlinks all repo `zsh/*.zsh` files into `${ZSH_CUSTOM:-~/.oh-my-zsh/custom}`
 
 This also loads `zsh/bracketed-paste.zsh`, which enables `bracketed-paste-magic` to prevent pasted commands from showing raw control prefixes like `[200~`.
 

@@ -15,13 +15,12 @@ Exceptions:
   - for 'ssh', the link target is ~/.ssh
   - for 'git', symlink git/.gitconfig -> ~/.gitconfig and
     git/.gitignore_global -> ~/.gitignore_global
-If the destination already exists and is not the desired symlink, it will be
-moved aside to a timestamped .bak.<timestamp> path.
-
 Special behavior for 'zsh':
   - ensures Oh My Zsh is installed (unattended)
-  - installs configured custom plugins
-  - appends the managed zsh config source snippet to ~/.zshrc (if missing)
+  - clones common custom plugins under $ZSH_CUSTOM/plugins
+  - symlinks repo zsh/*.zsh into $ZSH_CUSTOM/*.zsh
+If the destination already exists and is not the desired symlink, it will be
+moved aside to a timestamped .bak.<timestamp> path.
 EOF
 }
 
@@ -35,52 +34,55 @@ install_oh_my_zsh_if_missing() {
 	RUNZSH=no CHSH=no KEEP_ZSHRC=yes sh -c "$(curl -fsSL https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/tools/install.sh)"
 }
 
-install_zsh_plugins_if_available() {
-	local script_dir="$1"
-	local plugin_script="${script_dir}/install-zsh-plugins.sh"
+clone_plugin_if_missing() {
+	local plugin_name="$1"
+	local repo_url="$2"
+	local plugins_dir="${ZSH_CUSTOM:-$HOME/.oh-my-zsh/custom}/plugins"
+	local plugin_dir="${plugins_dir}/${plugin_name}"
 
-	if [[ ! -f "$plugin_script" ]]; then
-		echo "skip: plugin installer not found: $plugin_script"
+	mkdir -p "$plugins_dir"
+
+	if [[ -d "$plugin_dir" ]]; then
+		echo "ok: plugin already installed: $plugin_name"
 		return 0
 	fi
 
-	echo "installing: Oh My Zsh custom plugins"
-	bash "$plugin_script"
+	echo "installing: plugin $plugin_name"
+	git clone "$repo_url" "$plugin_dir"
 }
 
-ensure_zshrc_sources_config_dir() {
-	local zshrc="$HOME/.zshrc"
-	local marker_begin="# >>> bootstrap-zsh-managed >>>"
-	local marker_end="# <<< bootstrap-zsh-managed <<<"
-	local source_line='for f in "${XDG_CONFIG_HOME:-$HOME/.config}/zsh/"*.zsh; do source "$f"; done'
+install_zsh_plugins() {
+	clone_plugin_if_missing "zsh-autosuggestions" "https://github.com/zsh-users/zsh-autosuggestions"
+	clone_plugin_if_missing "zsh-syntax-highlighting" "https://github.com/zsh-users/zsh-syntax-highlighting.git"
+	clone_plugin_if_missing "zsh-fzf-history-search" "https://github.com/joshskidmore/zsh-fzf-history-search.git"
+}
 
-	touch "$zshrc"
+link_zsh_custom_files() {
+	local script_dir="$1"
+	local zsh_custom="${ZSH_CUSTOM:-$HOME/.oh-my-zsh/custom}"
+	local src_file dest_file
 
-	if grep -Fq "$marker_begin" "$zshrc"; then
-		echo "ok: managed zshrc snippet already present"
-		return 0
+	if [[ ! -d "${script_dir}/zsh" ]]; then
+		echo "error: zsh config directory not found at: ${script_dir}/zsh" >&2
+		exit 2
 	fi
 
-	if grep -Fq "$source_line" "$zshrc"; then
-		echo "ok: zsh config source line already present"
-		return 0
-	fi
+	mkdir -p "$zsh_custom"
 
-	cat >>"$zshrc" <<EOF
-
-$marker_begin
-$source_line
-$marker_end
-EOF
-
-	echo "updated: appended zsh config source snippet to $zshrc"
+	for src_file in "${script_dir}/zsh/"*.zsh; do
+		if [[ ! -f "$src_file" ]]; then
+			continue
+		fi
+		dest_file="${zsh_custom}/$(basename "$src_file")"
+		link_path "$src_file" "$dest_file"
+	done
 }
 
 bootstrap_zsh() {
 	local script_dir="$1"
 	install_oh_my_zsh_if_missing
-	install_zsh_plugins_if_available "$script_dir"
-	ensure_zshrc_sources_config_dir
+	install_zsh_plugins
+	link_zsh_custom_files "$script_dir"
 }
 
 link_path() {
@@ -122,6 +124,11 @@ app="$1"
 
 script_dir="$(cd -- "$(dirname -- "${BASH_SOURCE[0]}")" && pwd -P)"
 
+if [[ "$app" == "zsh" ]]; then
+	bootstrap_zsh "$script_dir"
+	exit 0
+fi
+
 if [[ "$app" == "git" ]]; then
 	gitconfig_src="${script_dir}/git/.gitconfig"
 	gitignore_src="${script_dir}/git/.gitignore_global"
@@ -154,7 +161,3 @@ else
 fi
 
 link_path "$src" "$dest"
-
-if [[ "$app" == "zsh" ]]; then
-	bootstrap_zsh "$script_dir"
-fi
