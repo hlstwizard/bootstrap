@@ -3,6 +3,8 @@ local wezterm = require("wezterm")
 
 local config = wezterm.config_builder()
 
+config.font_size = 11.0
+
 config.unix_domains = {
 	{
 		name = "unix",
