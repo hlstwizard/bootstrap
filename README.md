@@ -44,6 +44,18 @@ Notes:
 - `raycast` is used as the launcher/window-management tool.
 - Raycast config is stored in OneDrive; remember to back it up regularly.
 
+### Raycast Security Scripts
+
+This repo includes custom Raycast scripts under `raycast/scripts/`.
+
+- `get-bitwarden-2fa.sh`: fetches TOTP from Bitwarden CLI and copies it to clipboard. It caches a BW session token in `~/Library/Caches/raycast-bitwarden-session` to reduce repeated unlock prompts.
+- `lock-mac-and-bitwarden.sh`: locks Bitwarden first (`bw lock`), clears the cached session token file, then locks the Mac session.
+
+Recommended hardening:
+
+- In Raycast, bind your lock shortcut (for example `cmd+l`) to `lock-mac-and-bitwarden.sh` instead of the built-in Lock command.
+- Keep the old lock command unbound to avoid bypassing Bitwarden lock.
+
 ## Set Up Zsh
 
 1. Load zsh configs and plugins via:
