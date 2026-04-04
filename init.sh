@@ -18,7 +18,8 @@ Exceptions:
 Special behavior for 'zsh':
   - ensures Oh My Zsh is installed (unattended)
   - clones common custom plugins under $ZSH_CUSTOM/plugins
-  - symlinks repo zsh/*.zsh into $ZSH_CUSTOM/*.zsh
+  - symlinks repo zsh/scripts/*.zsh into $ZSH_CUSTOM/*.zsh
+  - symlinks repo zsh/.zshrc to ~/.zshrc
 If the destination already exists and is not the desired symlink, it will be
 moved aside to a timestamped .bak.<timestamp> path.
 EOF
@@ -62,14 +63,14 @@ link_zsh_custom_files() {
 	local zsh_custom="${ZSH_CUSTOM:-$HOME/.oh-my-zsh/custom}"
 	local src_file dest_file
 
-	if [[ ! -d "${script_dir}/zsh" ]]; then
-		echo "error: zsh config directory not found at: ${script_dir}/zsh" >&2
+	if [[ ! -d "${script_dir}/zsh/scripts" ]]; then
+		echo "error: zsh scripts directory not found at: ${script_dir}/zsh/scripts" >&2
 		exit 2
 	fi
 
 	mkdir -p "$zsh_custom"
 
-	for src_file in "${script_dir}/zsh/"*.zsh; do
+	for src_file in "${script_dir}/zsh/scripts/"*.zsh; do
 		if [[ ! -f "$src_file" ]]; then
 			continue
 		fi
@@ -78,11 +79,24 @@ link_zsh_custom_files() {
 	done
 }
 
+link_zshrc_file() {
+	local script_dir="$1"
+	local zshrc_src="${script_dir}/zsh/.zshrc"
+
+	if [[ ! -f "$zshrc_src" ]]; then
+		echo "error: zshrc file not found at: $zshrc_src" >&2
+		exit 2
+	fi
+
+	link_path "$zshrc_src" "$HOME/.zshrc"
+}
+
 bootstrap_zsh() {
 	local script_dir="$1"
 	install_oh_my_zsh_if_missing
 	install_zsh_plugins
 	link_zsh_custom_files "$script_dir"
+	link_zshrc_file "$script_dir"
 }
 
 link_path() {
@@ -94,7 +108,7 @@ link_path() {
 	mkdir -p "$(dirname "$dest_path")"
 
 	if [[ -L "$dest_path" ]]; then
-		dest_abs="$(readlink -f "$dest_path" 2>/dev/null || realpath "$dest_path")"
+		dest_abs="$(readlink -f "$dest_path" 2>/dev/null || realpath "$dest_path" 2>/dev/null || true)"
 		if [[ "$dest_abs" == "$src_abs" ]]; then
 			echo "ok: already linked: $dest_path -> $src_abs"
 			return 0

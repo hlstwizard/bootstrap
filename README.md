@@ -62,9 +62,10 @@ plugins=(git zsh-autosuggestions zsh-syntax-highlighting zsh-fzf-history-search)
 
 - installs Oh My Zsh if missing (unattended)
 - clones common plugins into `${ZSH_CUSTOM:-~/.oh-my-zsh/custom}/plugins`
-- symlinks all repo `zsh/*.zsh` files into `${ZSH_CUSTOM:-~/.oh-my-zsh/custom}`
+- symlinks all repo `zsh/scripts/*.zsh` files into `${ZSH_CUSTOM:-~/.oh-my-zsh/custom}`
+- symlinks repo `zsh/.zshrc` to `~/.zshrc`
 
-This also loads `zsh/bracketed-paste.zsh`, which enables `bracketed-paste-magic` to prevent pasted commands from showing raw control prefixes like `[200~`.
+This also loads `zsh/scripts/bracketed-paste.zsh`, which enables `bracketed-paste-magic` to prevent pasted commands from showing raw control prefixes like `[200~`.
 
 ## Input Method (Rime / Squirrel)
 
@@ -96,7 +97,7 @@ cp -r ~/Library/CloudStorage/OneDrive-Personal/RimeSync/. ~/Library/Rime/
 
 ## Environment Variables
 
-Some tools require environment variables to be set. Add them to your shell config (e.g., `~/.zshrc` or a `zsh/*.zsh` file):
+Some tools require environment variables to be set. Add them to your shell config (e.g., `~/.zshrc` or a `zsh/scripts/*.zsh` file):
 
 | Variable | Used by | Purpose |
 |---|---|---|
