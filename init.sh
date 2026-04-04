@@ -25,6 +25,26 @@ moved aside to a timestamped .bak.<timestamp> path.
 EOF
 }
 
+init_colors() {
+	if [[ -t 1 && -z "${NO_COLOR-}" && "${TERM-}" != "dumb" ]]; then
+		COLOR_OK="\033[32m"
+		COLOR_WARN="\033[33m"
+		COLOR_RESET="\033[0m"
+	else
+		COLOR_OK=""
+		COLOR_WARN=""
+		COLOR_RESET=""
+	fi
+}
+
+log_ok() {
+	printf "%b%s%b\n" "$COLOR_OK" "$1" "$COLOR_RESET"
+}
+
+log_warn() {
+	printf "%b%s%b\n" "$COLOR_WARN" "$1" "$COLOR_RESET" >&2
+}
+
 link_path() {
 	local src_path="$1"
 	local dest_path="$2"
@@ -36,7 +56,7 @@ link_path() {
 	if [[ -L "$dest_path" ]]; then
 		dest_abs="$(readlink -f "$dest_path" 2>/dev/null || realpath "$dest_path" 2>/dev/null || true)"
 		if [[ "$dest_abs" == "$src_abs" ]]; then
-			echo "ok: already linked: $dest_path -> $src_abs"
+			log_ok "ok: already linked: $dest_path -> $src_abs"
 			return 0
 		fi
 	fi
@@ -54,13 +74,15 @@ link_path() {
 
 check_git_delta_installed() {
 	if command -v delta >/dev/null 2>&1; then
-		echo "ok: git-delta is installed"
+		log_ok "ok: git-delta is installed"
 		return 0
 	fi
 
-	echo "warn: git-delta is not installed" >&2
+	log_warn "warn: git-delta is not installed"
 	echo "hint: install it with: brew install git-delta" >&2
 }
+
+init_colors
 
 if [[ ${1-} == "-h" || ${1-} == "--help" ]]; then
 	usage
