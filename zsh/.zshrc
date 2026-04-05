@@ -34,6 +34,9 @@ fi
 
 source "$ZSH/oh-my-zsh.sh"
 
+# Re-apply custom prompt after theme loading.
+[[ -f "${ZSH_CUSTOM:-$ZSH/custom}/prompt.zsh" ]] && source "${ZSH_CUSTOM:-$ZSH/custom}/prompt.zsh"
+
 # Load optional local environment.
 [[ -f "$HOME/.local/bin/env" ]] && source "$HOME/.local/bin/env"
 
