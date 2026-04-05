@@ -16,8 +16,5 @@
       "type": "remote",
       "url": "http://127.0.0.1:8783/mcp"
     }
-  },
-  "plugin": [
-    "understand-anything@git+https://github.com/Lum1104/Understand-Anything.git"
-  ]
+  }
 }
