@@ -18,6 +18,9 @@ brew "git-crypt"
 brew "gh"
 brew "git-delta"
 
+# python
+brew "uv"
+
 # node
 brew "nvm"
 

@@ -19,6 +19,12 @@ elif command -v brew >/dev/null 2>&1; then
   eval "$(brew shellenv)"
 fi
 
+# Ensure user-local executables are available first.
+typeset -U path PATH
+if [[ -d "$HOME/.local/bin" ]]; then
+  path=("$HOME/.local/bin" $path)
+fi
+
 # Skip compaudit on startup and disable OMZ auto-update checks.
 ZSH_DISABLE_COMPFIX="true"
 zstyle ':omz:update' mode disabled

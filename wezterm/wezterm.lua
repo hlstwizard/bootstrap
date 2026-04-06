@@ -4,6 +4,8 @@ local mux = wezterm.mux
 
 local config = wezterm.config_builder()
 
+config.front_end = "WebGpu"
+
 local function fit_window_to_active_screen(window)
 	local gui_window = window:gui_window()
 	if not gui_window then

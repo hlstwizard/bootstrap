@@ -76,6 +76,8 @@ Implementation note: zsh bootstrap logic is maintained in `zsh/init.sh`, and `in
 
 `zsh/.zshrc` also initializes Homebrew shell environment for both macOS and Linux
 (`brew shellenv`), so custom scripts can safely use commands installed via Homebrew.
+It also prepends `~/.local/bin` to `PATH` (when present), so user-installed CLI tools
+such as `uv tool` shims are discoverable by default.
 
 To add a plugin, update only `zsh/plugins.conf` with one line per plugin:
 
