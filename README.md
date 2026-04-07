@@ -172,6 +172,15 @@ export ENV_AUTO_MODULES="20-app-opencode 20-app-mcp"
 source ~/.local/bin/env
 ```
 
+For per-machine differences, prefer setting `ENV_AUTO_MODULES` in `~/.zshrc.local` (not tracked in this repo):
+
+```bash
+# ~/.zshrc.local
+export ENV_AUTO_MODULES="20-app-opencode"
+```
+
+`zsh/.zshrc` already loads `~/.zshrc.local` before `~/.local/bin/env`, so each machine can enable a different module set.
+
 Included templates:
 
 - `20-app-opencode.sh`: OpenCode-related non-secret env vars
