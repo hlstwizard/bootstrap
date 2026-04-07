@@ -6,15 +6,15 @@
   "mcp": {
     "azure": {
       "type": "remote",
-      "url": "http://192.168.64.1:8781/mcp"
+      "url": "http://{env:MCP_ENDPOINT_HOST}:8781/mcp"
     },
     "awesome-copilot": {
       "type": "remote",
-      "url": "http://192.168.64.1:8782/mcp"
+      "url": "http://{env:MCP_ENDPOINT_HOST}:8782/mcp"
     },
     "context7": {
       "type": "remote",
-      "url": "http://192.168.64.1:8783/mcp"
+      "url": "http://{env:MCP_ENDPOINT_HOST}:8783/mcp"
     }
   }
 }

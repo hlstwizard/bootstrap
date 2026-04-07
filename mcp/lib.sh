@@ -7,6 +7,7 @@ LOG_DIR="${RUN_DIR}/logs"
 ENV_FILE="${SCRIPT_DIR}/.env"
 SERVERS_FILE_DEFAULT="${SCRIPT_DIR}/servers.conf"
 SERVERS_FILE="${MCP_SERVERS_FILE:-${SERVERS_FILE_DEFAULT}}"
+MCP_ENDPOINT_HOST="${MCP_ENDPOINT_HOST:-127.0.0.1}"
 
 ensure_runtime_dirs() {
 	mkdir -p "${RUN_DIR}" "${LOG_DIR}"
@@ -50,4 +51,9 @@ expand_command() {
 	set +u
 	eval "printf '%s' \"${raw}\""
 	set -u
+}
+
+mcp_url() {
+	local port="$1"
+	printf 'http://%s:%s/mcp' "${MCP_ENDPOINT_HOST}" "${port}"
 }

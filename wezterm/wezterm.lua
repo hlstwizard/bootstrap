@@ -4,7 +4,20 @@ local mux = wezterm.mux
 
 local config = wezterm.config_builder()
 
-config.front_end = "WebGpu"
+local function supports_hardware_acceleration()
+	if not wezterm.gui or not wezterm.gui.enumerate_gpus then
+		return false
+	end
+
+	local ok, gpus = pcall(wezterm.gui.enumerate_gpus)
+	return ok and type(gpus) == "table" and #gpus > 0
+end
+
+if supports_hardware_acceleration() then
+	config.front_end = "WebGpu"
+else
+	config.front_end = "Software"
+end
 
 local function fit_window_to_active_screen(window)
 	local gui_window = window:gui_window()

@@ -140,7 +140,7 @@ export CONTEXT7_API_KEY="your-api-key"
 ```
 
 - **Copilot** reads it via `copilot/mcp-config.json` (passed as an HTTP header to the Context7 MCP endpoint).
-- **OpenCode (daemonized MCP mode)** reads it via `mcp/.env` when you run `mcp/start.sh`.
+- **OpenCode (daemonized MCP mode)** reads it via `mcp/.env` when you run `mcp/mcp.sh start`.
 
 ## Local Daemonized MCP Servers (Shared Across OpenCode Processes)
 
@@ -148,18 +148,18 @@ To avoid each OpenCode process spawning its own MCP server instances, this repo 
 
 Files:
 
-- `mcp/start.sh`: starts MCP servers as background daemons (via `supergateway`) and writes PID/log files.
-- `mcp/stop.sh`: stops daemonized MCP servers.
-- `mcp/status.sh`: prints running/stopped status.
+- `mcp/mcp.sh`: manages MCP daemons with subcommands (`start|stop|status|restart`).
 - `mcp/servers.conf`: server list and start commands (`name|enabled|port|stdio_command`).
 - `mcp/lib.sh`: shared helper functions used by the scripts.
 - `mcp/sync-opencode-mcp.sh`: syncs enabled server endpoints into `opencode/opencode.json`.
 
 Current local endpoints (used by `opencode/opencode.json`):
 
-- Azure MCP: `http://127.0.0.1:8781/mcp`
-- awesome-copilot MCP: `http://127.0.0.1:8782/mcp`
-- Context7 MCP: `http://127.0.0.1:8783/mcp`
+- Azure MCP: `http://{env:MCP_ENDPOINT_HOST}:8781/mcp`
+- awesome-copilot MCP: `http://{env:MCP_ENDPOINT_HOST}:8782/mcp`
+- Context7 MCP: `http://{env:MCP_ENDPOINT_HOST}:8783/mcp`
+
+You can override the endpoint host with `MCP_ENDPOINT_HOST` (for example your host LAN IP), so VMs can reach the MCP daemons.
 
 ### Usage
 
@@ -173,6 +173,10 @@ cp mcp/.env.example mcp/.env
 
 ```text
 CONTEXT7_API_KEY=your-api-key
+# Optional: host/IP for generated endpoint URLs.
+# Keep 127.0.0.1 for local-only access.
+# Set this to your host LAN IP when OpenCode runs inside a VM.
+MCP_ENDPOINT_HOST=127.0.0.1
 ```
 
 3. Edit `mcp/servers.conf` if you need to customize ports, enable/disable servers, or replace commands:
@@ -194,23 +198,31 @@ bash mcp/sync-opencode-mcp.sh
 ```
 
 - This writes `opencode/opencode.json` `mcp` entries as `remote` URLs for enabled servers.
+- By default, host is written as `{env:MCP_ENDPOINT_HOST}` so one linked config can be reused across different hosts.
+- Override with a fixed literal host by setting `OPENCODE_MCP_ENDPOINT_HOST` when syncing.
 
 5. Start daemons:
 
 ```bash
-bash mcp/start.sh
+bash mcp/mcp.sh start
 ```
 
 6. Check status:
 
 ```bash
-bash mcp/status.sh
+bash mcp/mcp.sh status
 ```
 
 7. Stop daemons when needed:
 
 ```bash
-bash mcp/stop.sh
+bash mcp/mcp.sh stop
+```
+
+8. Restart daemons when needed:
+
+```bash
+bash mcp/mcp.sh restart
 ```
 
 Notes:
@@ -220,7 +232,16 @@ Notes:
 - You can override the servers config path with `MCP_SERVERS_FILE`, for example:
 
 ```bash
-MCP_SERVERS_FILE=mcp/servers.conf.example bash mcp/status.sh
+MCP_SERVERS_FILE=mcp/servers.conf.example bash mcp/mcp.sh status
+```
+
+- For VM access, set `MCP_ENDPOINT_HOST` to a reachable host IP (for example `192.168.x.x`) before running `mcp/sync-opencode-mcp.sh`.
+- Ensure your VM networking mode and host firewall allow inbound access to MCP ports (`8781-8783` by default).
+
+Example with fixed host at sync time:
+
+```bash
+OPENCODE_MCP_ENDPOINT_HOST=127.0.0.1 bash mcp/sync-opencode-mcp.sh
 ```
 
 ### Load Env Vars From Bitwarden CLI (zsh)
