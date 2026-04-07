@@ -50,3 +50,11 @@ brew bundle --file="$profile_file"
 
 echo "Using AI Brewfile: $ai_file"
 brew bundle --file="$ai_file"
+
+if command -v npm >/dev/null 2>&1; then
+	echo "Installing qmd via npm"
+	npm install -g @tobilu/qmd
+else
+	echo "warn: npm not found; skipping qmd install" >&2
+	echo "hint: install Node.js first, then run: npm install -g @tobilu/qmd" >&2
+fi

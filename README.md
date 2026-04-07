@@ -17,6 +17,8 @@ Or use the helper script to auto-select by OS:
 ./bootstrap.sh
 ```
 
+`./bootstrap.sh` also installs `qmd` globally via npm (`npm install -g @tobilu/qmd`) after Brewfile packages are installed.
+
 - macOS (`Darwin`) -> `brewfiles/macos.Brewfile`
 - Fedora Linux -> `brewfiles/fedora-dev.Brewfile`
 - `brewfiles/common.Brewfile` is always applied first
