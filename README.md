@@ -142,6 +142,50 @@ export CONTEXT7_API_KEY="your-api-key"
 - **Copilot** reads it via `copilot/mcp-config.json` (passed as an HTTP header to the Context7 MCP endpoint).
 - **OpenCode (daemonized MCP mode)** reads it via `mcp/.env` when you run `mcp/mcp.sh start`.
 
+### Env Templates (Recommended)
+
+This repo provides env templates so you can keep a reusable setup across machines.
+
+Sync templates to your home directory:
+
+```bash
+./init.sh env
+```
+
+This command copies:
+
+- `env/templates/.local/bin/env` -> `~/.local/bin/env`
+- `env/templates/.config/env.d/*.sh` -> `${XDG_CONFIG_HOME:-~/.config}/env.d/*.sh`
+
+If destination files already exist and differ, they are moved to timestamped backups (`.bak.<timestamp>`) before copying.
+
+Default behavior is **on-demand loading**:
+
+- `source ~/.local/bin/env` to load helper functions
+- `envlist` to list available modules
+- `envload 20-app-opencode` to load a single module
+
+Optional auto-load (selected modules only):
+
+```bash
+export ENV_AUTO_MODULES="20-app-opencode 20-app-mcp"
+source ~/.local/bin/env
+```
+
+Included templates:
+
+- `20-app-opencode.sh`: OpenCode-related non-secret env vars
+- `20-app-mcp.sh`: local MCP host defaults (`MCP_ENDPOINT_HOST`)
+
+Template naming convention:
+
+- `00-*.sh`: base/shared settings
+- `10-*.sh`: toolchain/path settings
+- `20-app-*.sh`: app-specific settings (e.g. `20-app-opencode.sh`)
+- `90-*.sh`: machine-local overrides
+
+For secrets, do not store plaintext in env templates. Prefer Bitwarden (`~/.bw-env` + `bwenv`/`bwup`).
+
 ## Local Daemonized MCP Servers (Shared Across OpenCode Processes)
 
 To avoid each OpenCode process spawning its own MCP server instances, this repo now supports shared local MCP daemons under `mcp/`.

@@ -20,6 +20,10 @@ Special behavior for 'zsh':
   - clones common custom plugins under $ZSH_CUSTOM/plugins
   - symlinks repo zsh/scripts/*.zsh into $ZSH_CUSTOM/*.zsh
   - symlinks repo zsh/.zshrc to ~/.zshrc
+Special behavior for 'env':
+  - copies template env loader to ~/.local/bin/env
+  - copies env modules from env/templates/.config/env.d/*.sh to
+    ${XDG_CONFIG_HOME:-~/.config}/env.d/
 If the destination already exists and is not the desired symlink, it will be
 moved aside to a timestamped .bak.<timestamp> path.
 EOF
@@ -102,12 +106,27 @@ if [[ -f "$zsh_init_script" ]]; then
 	source "$zsh_init_script"
 fi
 
+env_init_script="${script_dir}/env/init.sh"
+if [[ -f "$env_init_script" ]]; then
+	# shellcheck source=/dev/null
+	source "$env_init_script"
+fi
+
 if [[ "$app" == "zsh" ]]; then
 	if [[ ! -f "$zsh_init_script" ]]; then
 		echo "error: zsh init script not found at: $zsh_init_script" >&2
 		exit 2
 	fi
 	bootstrap_zsh "$script_dir"
+	exit 0
+fi
+
+if [[ "$app" == "env" ]]; then
+	if [[ ! -f "$env_init_script" ]]; then
+		echo "error: env init script not found at: $env_init_script" >&2
+		exit 2
+	fi
+	bootstrap_env "$script_dir"
 	exit 0
 fi
 

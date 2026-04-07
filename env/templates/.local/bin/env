@@ -1,0 +1,40 @@
+#!/usr/bin/env zsh
+
+: "${ENV_D_DIR:=${XDG_CONFIG_HOME:-$HOME/.config}/env.d}"
+
+envload() {
+  local module_name="$1"
+  local module_path
+
+  if [[ -z "$module_name" ]]; then
+    printf 'usage: envload <module-name>\n' >&2
+    return 2
+  fi
+
+  module_name="${module_name%.sh}"
+  module_path="$ENV_D_DIR/${module_name}.sh"
+
+  if [[ ! -r "$module_path" ]]; then
+    printf 'envload: module not found: %s\n' "$module_path" >&2
+    return 1
+  fi
+
+  source "$module_path"
+}
+
+envlist() {
+  local f
+  setopt localoptions null_glob
+  for f in "$ENV_D_DIR"/*.sh; do
+    basename "$f" .sh
+  done
+}
+
+# Optional auto-load list, e.g. ENV_AUTO_MODULES="00-base 20-app-opencode"
+if [[ -n "${ENV_AUTO_MODULES:-}" ]]; then
+  mod=''
+  for mod in ${(z)ENV_AUTO_MODULES}; do
+    envload "$mod" || true
+  done
+  unset mod
+fi

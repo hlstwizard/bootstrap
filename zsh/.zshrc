@@ -43,7 +43,10 @@ source "$ZSH/oh-my-zsh.sh"
 # Re-apply custom prompt after theme loading.
 [[ -f "${ZSH_CUSTOM:-$ZSH/custom}/prompt.zsh" ]] && source "${ZSH_CUSTOM:-$ZSH/custom}/prompt.zsh"
 
-# Load optional local environment.
+# Load optional machine-local shell overrides (not tracked in repo).
+[[ -f "$HOME/.zshrc.local" ]] && source "$HOME/.zshrc.local"
+
+# Load optional local environment helpers.
 [[ -f "$HOME/.local/bin/env" ]] && source "$HOME/.local/bin/env"
 
 # Print profiling result at shell startup end.
