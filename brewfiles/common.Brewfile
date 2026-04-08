@@ -10,6 +10,7 @@ brew "tree-sitter-cli"
 brew "zsh"
 brew "zoxide"
 brew "git"
+brew "gitui"
 brew "jq"
 brew "fzf"
 

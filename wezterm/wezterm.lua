@@ -60,6 +60,36 @@ config.default_gui_startup_args = { "connect", "unix" }
 
 config.leader = { key = "Space", mods = "ALT", timeout_milliseconds = 1000 }
 
+local function is_vim(pane)
+	-- this is set by smart-splits.nvim and unset on ExitPre in Neovim
+	return pane:get_user_vars().IS_NVIM == "true"
+end
+
+local direction_keys = {
+	h = "Left",
+	j = "Down",
+	k = "Up",
+	l = "Right",
+}
+
+local function split_nav(resize_or_move, key)
+	local mods = resize_or_move == "resize" and "META" or "CTRL"
+
+	return {
+		key = key,
+		mods = mods,
+		action = wezterm.action_callback(function(win, pane)
+			if is_vim(pane) then
+				win:perform_action({ SendKey = { key = key, mods = mods } }, pane)
+			elseif resize_or_move == "resize" then
+				win:perform_action({ AdjustPaneSize = { direction_keys[key], 3 } }, pane)
+			else
+				win:perform_action({ ActivatePaneDirection = direction_keys[key] }, pane)
+			end
+		end),
+	}
+end
+
 -- Basic: split window like iTerm (Cmd+d)
 config.keys = {
 	{ mods = "LEADER", key = "p", action = wezterm.action.PaneSelect },
@@ -81,6 +111,16 @@ config.keys = {
 		mods = "CMD",
 		action = wezterm.action.CloseCurrentPane({ confirm = false }),
 	},
+
+	-- smart-splits integration (Neovim + WezTerm)
+	split_nav("move", "h"),
+	split_nav("move", "j"),
+	split_nav("move", "k"),
+	split_nav("move", "l"),
+	split_nav("resize", "h"),
+	split_nav("resize", "j"),
+	split_nav("resize", "k"),
+	split_nav("resize", "l"),
 }
 
 return config
