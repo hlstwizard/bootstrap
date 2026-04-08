@@ -101,6 +101,32 @@ Then rerun:
 
 This also loads `zsh/scripts/bracketed-paste.zsh`, which enables `bracketed-paste-magic` to prevent pasted commands from showing raw control prefixes like `[200~`.
 
+`zsh/scripts/ssh-agent.zsh` is also loaded automatically and will:
+
+- reuse an existing `ssh-agent` from `${XDG_STATE_HOME:-~/.local/state}/ssh-agent/agent-<host>.env` when available
+- start a new `ssh-agent` automatically when needed
+- auto-add keys only when the agent has no identities
+
+Per-host key customization (recommended):
+
+- `~/.ssh/agent-keys`: shared key list for all hosts
+- `~/.ssh/agent-keys.<hostname>`: host-specific key list (hostname defaults to `${HOST%%.*}`)
+
+Each file supports one key path per line and `#` comments. Example:
+
+```text
+~/.ssh/id_ed25519
+~/.ssh/work
+# optional per-machine key
+~/.ssh/personal
+```
+
+Optional env overrides:
+
+- `SSH_AGENT_HOSTNAME`: override host tag used in env/key file names
+- `SSH_AGENT_ENV_FILE`: override agent env file path
+- `SSH_AGENT_AUTO_KEYS`: explicit key list string (shell words)
+
 ## Input Method (Rime / Squirrel)
 
 1. Install [Squirrel](https://rime.im/) via Homebrew (included in `brewfiles/macos.Brewfile`) or manually.
