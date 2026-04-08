@@ -90,12 +90,33 @@ local function split_nav(resize_or_move, key)
 	}
 end
 
+wezterm.on("preset-dev-1", function(window, pane)
+	local cwd = pane:get_current_working_dir()
+
+	pane:split({
+		direction = "Left",
+		size = 0.5,
+		cwd = cwd,
+		command = { args = { "gitui" } },
+	})
+
+	local right_bottom = pane:split({
+		direction = "Bottom",
+		size = 0.5,
+		cwd = cwd,
+		command = { args = { "opencode" } },
+	})
+
+	window:perform_action(wezterm.action.ActivatePaneDirection("Up"), right_bottom)
+end)
+
 -- Basic: split window like iTerm (Cmd+d)
 config.keys = {
 	{ mods = "LEADER", key = "p", action = wezterm.action.PaneSelect },
 	{ key = "f", mods = "LEADER", action = wezterm.action.QuickSelect },
 	{ key = "x", mods = "LEADER", action = wezterm.action.ActivateCopyMode },
 	{ key = "r", mods = "LEADER", action = wezterm.action.ReloadConfiguration },
+	{ key = "1", mods = "LEADER", action = wezterm.action.EmitEvent("preset-dev-1") },
 	{
 		key = "d",
 		mods = "CMD",
