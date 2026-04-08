@@ -1,0 +1,9 @@
+patch:
+  # 将 Tab 设置为下翻页，Shift+Tab 设置为上翻页
+  "key_binder/bindings/@before 0":
+    { when: has_menu, accept: Tab, send: Page_Down }
+  "key_binder/bindings/@before 1":
+    { when: has_menu, accept: Shift+Tab, send: Page_Up }
+
+  # 每页显示7个
+  "menu/page_size": 7

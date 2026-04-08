@@ -1,0 +1,3 @@
+Rime/**/*.userdb.txt filter=git-crypt diff=git-crypt
+Rime/**/custom_phrase.txt filter=git-crypt diff=git-crypt
+Rime/**/user.yaml filter=git-crypt diff=git-crypt
