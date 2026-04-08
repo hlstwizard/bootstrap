@@ -19,11 +19,16 @@ When mixing languages, keep the surrounding explanation in Chinese and preserve 
 - Ask questions only when blocked by ambiguity, missing required secrets/IDs, or high-risk irreversible actions.
 - Follow existing repository conventions before introducing new structure, dependencies, or naming patterns.
 - Keep explanations concise and actionable: what changed, why, and impact.
+- Keep solutions simple and direct.
+- Avoid sycophantic openers/closers or unnecessary fluff.
 
 ## Execution Workflow
 
+- Think before acting.
 - Read relevant context first (`README`, existing config files, script entry points) before editing.
+- Do not re-read files already read unless new context requires it.
 - Prefer minimal, incremental changes over broad refactors.
+- Prefer editing existing files over rewriting whole files.
 - After changes, report impact scope with concrete file paths and behavior changes.
 - If behavior or usage changes, update related docs/examples in the same task.
 
@@ -36,6 +41,7 @@ When mixing languages, keep the surrounding explanation in Chinese and preserve 
 ## Definition of Done
 
 - Validation is scale-based: run the smallest sufficient checks for the change.
+- Test changes before declaring completion.
 - Always include an impact summary (affected files/modules/commands).
 - If behavior changed, documentation is updated; if not, state why no doc update is needed.
 
@@ -44,3 +50,7 @@ When mixing languages, keep the surrounding explanation in Chinese and preserve 
 - Do not commit or push by default; only do so on explicit user request.
 - You may propose commit messages/splitting plans, but do not apply them automatically.
 - Never revert unrelated user changes unless explicitly instructed.
+
+## Priority
+
+- User instructions always override this file.
