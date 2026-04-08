@@ -119,13 +119,33 @@ bash rime-install iDvel/rime-ice:others/recipes/full
 
 > To update rime-ice later, re-run `bash rime-install iDvel/rime-ice:others/recipes/full` from `~/plum`.
 
-3. Overlay your saved config from OneDrive on top of the rime-ice base:
+3. Initialize local Rime config from this repo:
 
 ```bash
-cp -r ~/Library/CloudStorage/OneDrive-Personal/RimeSync/. ~/Library/Rime/
+./init.sh rime
 ```
 
-4. Reload Rime: click the Squirrel menu bar icon → **Deploy** (重新部署).
+This command will:
+
+- symlink files from `Rime/` to `~/Library/Rime/` (including `custom_phrase_double.txt`, excluding `installation.yaml` and `user.yaml`)
+- write `~/Library/Rime/installation.yaml` with:
+  - a per-machine `installation_id` (default: `<os>-YYYYmmdd-HHMMSS`, e.g. `macos-20260408-141530`)
+  - `sync_dir` defaults to `~/OneDrive*/RimeSync` (requires a OneDrive link under `$HOME` and existing `RimeSync`)
+- create `${sync_dir}/${installation_id}` if missing
+
+Validation behavior:
+
+- if `~/OneDrive*` is missing, `./init.sh rime` exits with error
+- if `~/OneDrive*/RimeSync` is missing, `./init.sh rime` exits with error
+- use `RIME_SYNC_DIR` to override explicitly when needed
+
+Optional overrides:
+
+```bash
+RIME_INSTALLATION_ID="mac-your-id" RIME_SYNC_DIR="$HOME/Library/CloudStorage/OneDrive-个人/RimeSync" ./init.sh rime
+```
+
+4. Reload Rime: click the Squirrel menu bar icon -> **Deploy** (重新部署).
 
 > The Rime config folder defaults to `~/Library/Rime` on macOS.
 
