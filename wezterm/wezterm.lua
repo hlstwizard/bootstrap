@@ -9,10 +9,12 @@ local events = require("modules.events")
 local keys = require("modules.keys")
 local options = require("modules.options")
 local presets = require("modules.presets")
+local status = require("modules.status")
 local window = require("modules.window")
 
 events.register(wezterm, mux, window.fit_window_to_active_screen)
 presets.register(wezterm, act, constants.EVENTS)
+status.register(wezterm)
 
 options.apply(config, wezterm, constants)
 config.keys = keys.build(wezterm, act, constants)
