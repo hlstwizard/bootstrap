@@ -37,6 +37,7 @@ function M.build(wezterm, act, constants)
 		{ mods = "LEADER", key = "p", action = act.PaneSelect },
 		{ key = "f", mods = "LEADER", action = act.QuickSelect },
 		{ key = "x", mods = "LEADER", action = act.ActivateCopyMode },
+		{ key = "Enter", mods = "LEADER", action = act.TogglePaneZoomState },
 		{ key = "r", mods = "LEADER", action = act.EmitEvent(constants.EVENTS.PROMPT_TAB_TITLE) },
 		{ key = "1", mods = "LEADER", action = act.EmitEvent(constants.EVENTS.PRESET_DEV_1) },
 		{ key = "d", mods = "CMD", action = act.SplitHorizontal({ domain = "CurrentPaneDomain" }) },
