@@ -446,6 +446,18 @@ OpenCode configuration lives in `opencode/`.
 
 - `opencode/AGENTS.md`: default agent instructions (copied from `~/AGENTS.md`).
 
+### AstroNvim (Neovim)
+
+AstroNvim config lives in `nvim/` and is linked as your Neovim config:
+
+```bash
+./init.sh nvim
+```
+
+This creates a symlink from `nvim/` to `${XDG_CONFIG_HOME:-~/.config}/nvim`.
+
+Plugin versions are locked in `nvim/lazy-lock.json` and should be committed to keep plugin behavior consistent across machines.
+
 ## TODO
 
 - Add startup management integration (e.g., `launchd` on macOS) for MCP daemons if auto-start on login is desired.
