@@ -142,6 +142,30 @@ bwup() {
   bwenv_load --verbose
 }
 
+bwsession() {
+  if ! command -v bw >/dev/null 2>&1; then
+    printf 'bwsession: bw command not found\n' >&2
+    return 127
+  fi
+
+  export BW_SESSION="$(bw unlock --raw)" || return $?
+}
+
+bwtotp() {
+  local item_id="$1"
+
+  if [[ -z "$item_id" ]]; then
+    printf 'Usage: bwtotp <item-id>\n' >&2
+    return 2
+  fi
+
+  if [[ -z "${BW_SESSION:-}" ]]; then
+    bwsession || return $?
+  fi
+
+  bw get totp "$item_id" --session "$BW_SESSION"
+}
+
 if [[ "$BW_ENV_AUTOLOAD" == "1" ]]; then
   bwenv_load >/dev/null 2>&1
 fi

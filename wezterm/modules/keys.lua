@@ -43,6 +43,14 @@ function M.build(wezterm, act, constants)
 		{ key = "d", mods = "CMD", action = act.SplitHorizontal({ domain = "CurrentPaneDomain" }) },
 		{ key = "d", mods = "CMD|SHIFT", action = act.SplitVertical({ domain = "CurrentPaneDomain" }) },
 		{ key = "w", mods = "CMD", action = act.CloseCurrentPane({ confirm = false }) },
+		{
+			key = "l",
+			mods = "CMD",
+			action = act.Multiple({
+				act.ClearScrollback("ScrollbackAndViewport"),
+				act.SendKey({ key = "l", mods = "CTRL" }),
+			}),
+		},
 	}
 
 	for _, binding in ipairs(nav_bindings(wezterm, constants, "move")) do
