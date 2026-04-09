@@ -24,6 +24,9 @@ typeset -U path PATH
 if [[ -d "$HOME/.local/bin" ]]; then
   path=("$HOME/.local/bin" $path)
 fi
+if [[ -d "$HOME/.local/share/nvim/mason/bin" ]]; then
+  path=("$HOME/.local/share/nvim/mason/bin" $path)
+fi
 
 # Skip compaudit on startup and disable OMZ auto-update checks.
 ZSH_DISABLE_COMPFIX="true"
