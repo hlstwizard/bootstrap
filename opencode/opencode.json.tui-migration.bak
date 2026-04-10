@@ -3,6 +3,7 @@
   "permission": {
     "question": "allow"
   },
+  "theme": "kanagawa",
   "mcp": {
     "context7": {
       "type": "remote",
