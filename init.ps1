@@ -23,6 +23,7 @@ Exceptions:
   - for 'copilot', the link target is ~/.copilot
   - for 'ssh', the link target is ~/.ssh
   - for 'opencode', the link target is ~/.config/opencode
+  - for 'pwsh', the link target is ~/Documents/PowerShell
   - for 'wezterm', links config dir to ~/.config/wezterm and ensures ~/.wezterm.lua exists
   - for 'git', symlink git/.gitconfig -> ~/.gitconfig and
     git/.gitignore_global -> ~/.gitignore_global
@@ -190,6 +191,22 @@ if ($App -eq "wezterm") {
         Write-WeztermLoader -DestPath $weztermHome
     }
 
+    exit 0
+}
+
+if ($App -eq "pwsh") {
+    $pwshSrcDir = Join-Path $scriptDir "pwsh"
+    if (-not (Test-Path -LiteralPath $pwshSrcDir -PathType Container)) {
+        throw "error: app '$App' not found at: $pwshSrcDir"
+    }
+
+    $documentsDir = [Environment]::GetFolderPath("MyDocuments")
+    if ([string]::IsNullOrWhiteSpace($documentsDir)) {
+        throw "error: could not resolve Documents path for current user"
+    }
+
+    $pwshDestDir = Join-Path $documentsDir "PowerShell"
+    Link-Path -SourcePath $pwshSrcDir -DestPath $pwshDestDir
     exit 0
 }
 

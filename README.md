@@ -185,6 +185,7 @@ Behavior mirrors the generic link flow of `init.sh` (with Windows-native config 
 - `copilot` links to `~/.copilot`
 - `ssh` links to `~/.ssh`
 - `opencode` links to `~/.config/opencode`
+- `pwsh` links to your PowerShell profile directory (`~/Documents/PowerShell`)
 - `wezterm` links config dir to `~/.config/wezterm` and ensures `~/.wezterm.lua` points to that config
 - `git` links `git/.gitconfig` and `git/.gitignore_global` to home
 
