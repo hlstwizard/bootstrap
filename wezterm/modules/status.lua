@@ -1,14 +1,35 @@
 local M = {}
+local platform = require("modules.platform")
 
-local function basename(path)
-	if not path or path == "" then
-		return "?"
+local function decode_uri_component(text)
+	if not text or text == "" then
+		return ""
 	end
 
-	return path:gsub("(.*/)(.*)", "%2")
+	return text:gsub("%%(%x%x)", function(hex)
+		return string.char(tonumber(hex, 16))
+	end)
+end
+
+local function normalize_path(path, is_windows)
+	if not path or path == "" then
+		return "~"
+	end
+
+	path = decode_uri_component(path)
+
+	if is_windows then
+		path = path:gsub("^/([A-Za-z]:)", "%1")
+		path = path:gsub("/", "\\")
+		return path
+	end
+
+	path = path:gsub("\\", "/")
+	return path
 end
 
 local function get_hostname_and_cwd(wezterm, pane)
+	local is_windows = platform.is_windows(wezterm)
 	local cwd_uri = pane:get_current_working_dir()
 	if not cwd_uri then
 		return wezterm.hostname(), "~"
@@ -18,17 +39,13 @@ local function get_hostname_and_cwd(wezterm, pane)
 	local hostname = ""
 
 	if type(cwd_uri) == "userdata" then
-		cwd = cwd_uri.file_path
+		cwd = cwd_uri.file_path or ""
 		hostname = cwd_uri.host or wezterm.hostname()
 	else
-		cwd_uri = cwd_uri:sub(8)
-		local slash = cwd_uri:find("/")
-		if slash then
-			hostname = cwd_uri:sub(1, slash - 1)
-			cwd = cwd_uri:sub(slash):gsub("%%(%x%x)", function(hex)
-				return string.char(tonumber(hex, 16))
-			end)
-		end
+		local raw = cwd_uri:gsub("^file://", "")
+		local parsed_host, parsed_path = raw:match("^([^/]*)(/.*)$")
+		hostname = parsed_host or ""
+		cwd = parsed_path or raw
 	end
 
 	local dot = hostname:find("[.]")
@@ -39,8 +56,7 @@ local function get_hostname_and_cwd(wezterm, pane)
 		hostname = wezterm.hostname()
 	end
 
-	local dir = basename(cwd)
-	return hostname, dir
+	return hostname, normalize_path(cwd, is_windows)
 end
 
 function M.register(wezterm)
