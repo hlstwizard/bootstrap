@@ -1,5 +1,14 @@
 local M = {}
-local shell = os.getenv("SHELL") or "/bin/zsh"
+local platform = require("modules.platform")
+
+local function shell_command(wezterm, command)
+	if platform.is_windows(wezterm) then
+		return { "pwsh", "-NoLogo", "-NoExit", "-Command", command }
+	end
+
+	local shell = os.getenv("SHELL") or "/bin/zsh"
+	return { shell, "-lic", "exec " .. command }
+end
 
 local function resolve_pane_cwd(pane)
 	local cwd_uri = pane:get_current_working_dir()
@@ -18,14 +27,14 @@ function M.register(wezterm, act, events)
 			direction = "Left",
 			size = 0.5,
 			cwd = cwd,
-			args = { shell, "-lic", "exec gitui" },
+			args = shell_command(wezterm, "gitui"),
 		})
 
 		local right_bottom = pane:split({
 			direction = "Bottom",
 			size = 0.5,
 			cwd = cwd,
-			args = { shell, "-lic", "exec opencode" },
+			args = shell_command(wezterm, "opencode"),
 		})
 
 		window:perform_action(act.ActivatePaneDirection("Up"), right_bottom)

@@ -171,6 +171,29 @@ Optional overrides:
 RIME_INSTALLATION_ID="mac-your-id" RIME_SYNC_DIR="$HOME/Library/CloudStorage/OneDrive-个人/RimeSync" ./init.sh rime
 ```
 
+## Windows Initialization (PowerShell)
+
+For Windows, use the PowerShell variant:
+
+```powershell
+.\init.ps1 <app>
+```
+
+Behavior mirrors the generic link flow of `init.sh` (with Windows-native config location):
+
+- links `<repo>/<app>/` -> `%APPDATA%/<app>`
+- `copilot` links to `~/.copilot`
+- `ssh` links to `~/.ssh`
+- `opencode` links to `~/.config/opencode`
+- `pwsh` links to your PowerShell profile directory (`~/Documents/PowerShell`)
+- `wezterm` links config dir to `~/.config/wezterm` and ensures `~/.wezterm.lua` points to that config
+- `git` links `git/.gitconfig` and `git/.gitignore_global` to home
+
+Notes:
+
+- If destination already exists and is not the desired symlink, it is moved to a timestamped backup first.
+- `zsh` and `rime` are intentionally not supported in `init.ps1`; use `init.sh` for those app types.
+
 4. Reload Rime: click the Squirrel menu bar icon -> **Deploy** (重新部署).
 
 > The Rime config folder defaults to `~/Library/Rime` on macOS.
