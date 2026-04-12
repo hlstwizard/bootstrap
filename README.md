@@ -185,6 +185,7 @@ Behavior mirrors the generic link flow of `init.sh` (with Windows-native config 
 - `copilot` links to `~/.copilot`
 - `ssh` links to `~/.ssh`
 - `opencode` links to `~/.config/opencode`
+- `nvim` initializes submodule `nvim/` (if configured) and links to `%LOCALAPPDATA%/nvim`
 - `pwsh` links to your PowerShell profile directory (`~/Documents/PowerShell`)
 - `wezterm` links config dir to `~/.config/wezterm` and ensures `~/.wezterm.lua` points to that config
 - `git` links `git/.gitconfig` and `git/.gitignore_global` to home
@@ -476,6 +477,16 @@ AstroNvim config lives in `nvim/` and is linked as your Neovim config:
 ```bash
 ./init.sh nvim
 ```
+
+On Windows PowerShell:
+
+```powershell
+.\init.ps1 nvim
+```
+
+`init.ps1` will initialize the `nvim` git submodule first (when declared in `.gitmodules`), then link it into your Neovim config directory.
+
+`init.sh` now follows the same behavior: it initializes the `nvim` git submodule first (when declared in `.gitmodules`), then links it.
 
 This creates a symlink from `nvim/` to `${XDG_CONFIG_HOME:-~/.config}/nvim`.
 

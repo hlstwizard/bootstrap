@@ -23,6 +23,7 @@ Exceptions:
   - for 'copilot', the link target is ~/.copilot
   - for 'ssh', the link target is ~/.ssh
   - for 'opencode', the link target is ~/.config/opencode
+  - for 'nvim', initializes the git submodule first (if configured), then links to %LOCALAPPDATA%/nvim
   - for 'pwsh', the link target is ~/Documents/PowerShell
   - for 'wezterm', links config dir to ~/.config/wezterm and ensures ~/.wezterm.lua exists
   - for 'git', symlink git/.gitconfig -> ~/.gitconfig and
@@ -73,6 +74,34 @@ function Get-ConfigHome {
     }
 
     return (Join-Path $HOME "AppData/Roaming")
+}
+
+function Ensure-SubmoduleReady {
+    param(
+        [Parameter(Mandatory = $true)][string]$RepoDir,
+        [Parameter(Mandatory = $true)][string]$SubmodulePath
+    )
+
+    $gitmodules = Join-Path $RepoDir ".gitmodules"
+    if (-not (Test-Path -LiteralPath $gitmodules -PathType Leaf)) {
+        return
+    }
+
+    $escapedPath = [regex]::Escape($SubmodulePath)
+    $declared = Select-String -LiteralPath $gitmodules -Pattern "^\s*path\s*=\s*$escapedPath\s*$" -Quiet
+    if (-not $declared) {
+        return
+    }
+
+    if (-not (Get-Command git -ErrorAction SilentlyContinue)) {
+        throw "error: git is required to initialize submodule '$SubmodulePath', but it was not found in PATH"
+    }
+
+    Write-Host "syncing submodule: $SubmodulePath"
+    & git -C $RepoDir submodule update --init --recursive -- $SubmodulePath
+    if ($LASTEXITCODE -ne 0) {
+        throw "error: failed to initialize submodule '$SubmodulePath'"
+    }
 }
 
 function Link-Path {
@@ -210,6 +239,10 @@ if ($App -eq "pwsh") {
     exit 0
 }
 
+if ($App -eq "nvim") {
+    Ensure-SubmoduleReady -RepoDir $scriptDir -SubmodulePath "nvim"
+}
+
 $src = Join-Path $scriptDir $App
 if (-not (Test-Path -LiteralPath $src -PathType Container)) {
     throw "error: app '$App' not found at: $src"
@@ -221,6 +254,13 @@ if ($App -eq "copilot") {
     $dest = Join-Path $HOME ".ssh"
 } elseif ($App -eq "opencode") {
     $dest = Join-Path $HOME ".config/opencode"
+} elseif ($App -eq "nvim") {
+    $localAppData = [Environment]::GetFolderPath("LocalApplicationData")
+    if ([string]::IsNullOrWhiteSpace($localAppData)) {
+        $localAppData = Join-Path $HOME "AppData/Local"
+    }
+    New-Item -ItemType Directory -Path $localAppData -Force | Out-Null
+    $dest = Join-Path $localAppData "nvim"
 } else {
     $configHome = Get-ConfigHome
     New-Item -ItemType Directory -Path $configHome -Force | Out-Null
