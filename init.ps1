@@ -21,7 +21,7 @@ This creates a symlink from this repo's <app>/ to `%APPDATA%/<app>
 
 Exceptions:
   - for 'copilot', the link target is ~/.copilot
-  - for 'ssh', the link target is ~/.ssh
+  - for 'ssh', sync only ssh/config -> ~/.ssh/config
   - for 'opencode', the link target is ~/.config/opencode
   - for 'nvim', initializes the git submodule first (if configured), then links to %LOCALAPPDATA%/nvim
   - for 'pwsh', the link target is ~/Documents/PowerShell
@@ -201,6 +201,20 @@ if ($App -eq "git") {
     exit 0
 }
 
+if ($App -eq "ssh") {
+    $sshConfigSrc = Join-Path $scriptDir "ssh/config"
+    if (-not (Test-Path -LiteralPath $sshConfigSrc -PathType Leaf)) {
+        throw "error: ssh config not found at: $sshConfigSrc"
+    }
+
+    $sshDestDir = Join-Path $HOME ".ssh"
+    New-Item -ItemType Directory -Path $sshDestDir -Force | Out-Null
+
+    $sshConfigDest = Join-Path $sshDestDir "config"
+    Link-Path -SourcePath $sshConfigSrc -DestPath $sshConfigDest
+    exit 0
+}
+
 if ($App -eq "wezterm") {
     $weztermSrcDir = Join-Path $scriptDir "wezterm"
     if (-not (Test-Path -LiteralPath $weztermSrcDir -PathType Container)) {
@@ -250,8 +264,6 @@ if (-not (Test-Path -LiteralPath $src -PathType Container)) {
 
 if ($App -eq "copilot") {
     $dest = Join-Path $HOME ".copilot"
-} elseif ($App -eq "ssh") {
-    $dest = Join-Path $HOME ".ssh"
 } elseif ($App -eq "opencode") {
     $dest = Join-Path $HOME ".config/opencode"
 } elseif ($App -eq "nvim") {

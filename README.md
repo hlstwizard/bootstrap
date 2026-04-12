@@ -183,7 +183,7 @@ Behavior mirrors the generic link flow of `init.sh` (with Windows-native config 
 
 - links `<repo>/<app>/` -> `%APPDATA%/<app>`
 - `copilot` links to `~/.copilot`
-- `ssh` links to `~/.ssh`
+- `ssh` syncs only `ssh/config` to `~/.ssh/config` (keeps keys and known_hosts untouched)
 - `opencode` links to `~/.config/opencode`
 - `nvim` initializes submodule `nvim/` (if configured) and links to `%LOCALAPPDATA%/nvim`
 - `pwsh` links to your PowerShell profile directory (`~/Documents/PowerShell`)
@@ -427,7 +427,7 @@ By default, this creates a symlink from `<repo>/<app>/` to `${XDG_CONFIG_HOME:-~
 Exceptions:
 
 - `copilot` links to `~/.copilot`
-- `ssh` links to `~/.ssh`
+- `ssh` syncs only `ssh/config` to `~/.ssh/config` (keeps keys and known_hosts untouched)
 
 ### SSH Config
 
@@ -437,7 +437,9 @@ SSH hosts are managed in `ssh/config` in this repository.
 ./init.sh ssh
 ```
 
-This symlinks the repo `ssh/` directory to `~/.ssh` so host aliases (for example `testing` and `openclaw-test`) stay versioned and consistent across machines.
+This links only `ssh/config` from the repo to `~/.ssh/config` so host aliases (for example `testing` and `openclaw-test`) stay versioned and consistent across machines.
+
+Other files in `~/.ssh` (such as private keys and `known_hosts`) are intentionally not managed by this repo.
 
 If the destination already exists and isn't the desired symlink, it is moved aside to `*.bak.<timestamp>`.
 
