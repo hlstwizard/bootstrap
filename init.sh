@@ -15,6 +15,7 @@ Exceptions:
   - for 'ssh', the link target is ~/.ssh
   - for 'git', symlink git/.gitconfig -> ~/.gitconfig and
     git/.gitignore_global -> ~/.gitignore_global
+  - for 'nvim', initializes git submodule nvim/ first (if declared)
 Special behavior for 'zsh':
   - ensures Oh My Zsh is installed (unattended)
   - clones common custom plugins under $ZSH_CUSTOM/plugins
@@ -93,6 +94,37 @@ check_git_delta_installed() {
 
 	log_warn "warn: git-delta is not installed"
 	echo "hint: install it with: brew install git-delta" >&2
+}
+
+ensure_submodule_ready() {
+	local repo_dir="$1"
+	local submodule_path="$2"
+	local gitmodules_file="$repo_dir/.gitmodules"
+
+	if [[ ! -f "$gitmodules_file" ]]; then
+		return 0
+	fi
+
+	if ! awk -F'=' -v path="$submodule_path" '
+		$1 ~ /^[[:space:]]*path[[:space:]]*$/ {
+			gsub(/^[[:space:]]+|[[:space:]]+$/, "", $2)
+			if ($2 == path) found = 1
+		}
+		END { exit(found ? 0 : 1) }
+	' "$gitmodules_file"; then
+		return 0
+	fi
+
+	if ! command -v git >/dev/null 2>&1; then
+		echo "error: git is required to initialize submodule '$submodule_path', but it was not found in PATH" >&2
+		exit 2
+	fi
+
+	echo "syncing submodule: $submodule_path"
+	if ! git -C "$repo_dir" submodule update --init --recursive -- "$submodule_path"; then
+		echo "error: failed to initialize submodule '$submodule_path'" >&2
+		exit 2
+	fi
 }
 
 extract_installation_id() {
@@ -275,6 +307,10 @@ fi
 if [[ "$app" == "rime" ]]; then
 	bootstrap_rime "$script_dir"
 	exit 0
+fi
+
+if [[ "$app" == "nvim" ]]; then
+	ensure_submodule_ready "$script_dir" "nvim"
 fi
 
 if [[ "$app" == "git" ]]; then
