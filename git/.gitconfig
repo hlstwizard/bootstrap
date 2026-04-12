@@ -1,6 +1,7 @@
 [core]
+  filemode = false
   autocrlf = input
-  eol = lf
+  eol = native
   excludesfile = ~/.gitignore_global
   editor = nvim
   pager = delta
