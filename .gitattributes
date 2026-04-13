@@ -3,3 +3,31 @@ Rime/**/*.userdb.txt filter=git-crypt diff=git-crypt
 Rime/custom_phrase*.txt filter=git-crypt diff=git-crypt
 Rime/**/custom_phrase*.txt filter=git-crypt diff=git-crypt
 Rime/**/user.yaml filter=git-crypt diff=git-crypt
+
+# Cross-platform line ending policy
+* text=auto eol=lf
+
+# Keep scripts/configs LF everywhere
+*.sh text eol=lf
+*.bash text eol=lf
+*.zsh text eol=lf
+*.fish text eol=lf
+*.py text eol=lf
+*.rb text eol=lf
+*.pl text eol=lf
+*.lua text eol=lf
+*.yaml text eol=lf
+*.yml text eol=lf
+*.toml text eol=lf
+*.json text eol=lf
+*.ini text eol=lf
+*.conf text eol=lf
+*.gitconfig text eol=lf
+*.gitattributes text eol=lf
+*.gitignore text eol=lf
+*.md text eol=lf
+
+# Windows-native scripts keep CRLF if needed
+*.bat text eol=crlf
+*.cmd text eol=crlf
+*.ps1 text eol=crlf

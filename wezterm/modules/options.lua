@@ -1,4 +1,5 @@
 local M = {}
+local platform = require("modules.platform")
 
 local function supports_hardware_acceleration(wezterm)
 	if not wezterm.gui or not wezterm.gui.enumerate_gpus then
@@ -26,13 +27,20 @@ function M.apply(config, wezterm, constants)
 	config.show_tabs_in_tab_bar = true
 	config.use_fancy_tab_bar = false
 	config.status_update_interval = 1000
-	config.unix_domains = {
-		{
-			name = constants.DOMAIN_NAME,
-		},
-	}
-	config.default_gui_startup_args = { "connect", constants.DOMAIN_NAME }
-	config.leader = { key = "Space", mods = "ALT", timeout_milliseconds = 1000 }
+	if not platform.is_windows(wezterm) then
+		config.unix_domains = {
+			{
+				name = constants.DOMAIN_NAME,
+			},
+		}
+		config.default_gui_startup_args = { "connect", constants.DOMAIN_NAME }
+	end
+	if platform.is_windows(wezterm) then
+		config.default_prog = { "pwsh.exe", "-NoLogo" }
+		config.leader = { key = "Space", mods = "CTRL", timeout_milliseconds = 1000 }
+	else
+		config.leader = { key = "Space", mods = "ALT", timeout_milliseconds = 1000 }
+	end
 end
 
 return M

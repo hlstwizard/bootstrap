@@ -171,6 +171,30 @@ Optional overrides:
 RIME_INSTALLATION_ID="mac-your-id" RIME_SYNC_DIR="$HOME/Library/CloudStorage/OneDrive-个人/RimeSync" ./init.sh rime
 ```
 
+## Windows Initialization (PowerShell)
+
+For Windows, use the PowerShell variant:
+
+```powershell
+.\init.ps1 <app>
+```
+
+Behavior mirrors the generic link flow of `init.sh` (with Windows-native config location):
+
+- links `<repo>/<app>/` -> `%APPDATA%/<app>`
+- `copilot` links to `~/.copilot`
+- `ssh` syncs only `ssh/config` to `~/.ssh/config` (keeps keys and known_hosts untouched)
+- `opencode` links to `~/.config/opencode`
+- `nvim` initializes submodule `nvim/` (if configured) and links to `%LOCALAPPDATA%/nvim`
+- `pwsh` links to your PowerShell profile directory (`~/Documents/PowerShell`)
+- `wezterm` links config dir to `~/.config/wezterm` and ensures `~/.wezterm.lua` points to that config
+- `git` links `git/.gitconfig` and `git/.gitignore_global` to home
+
+Notes:
+
+- If destination already exists and is not the desired symlink, it is moved to a timestamped backup first.
+- `zsh` and `rime` are intentionally not supported in `init.ps1`; use `init.sh` for those app types.
+
 4. Reload Rime: click the Squirrel menu bar icon -> **Deploy** (重新部署).
 
 > The Rime config folder defaults to `~/Library/Rime` on macOS.
@@ -403,7 +427,7 @@ By default, this creates a symlink from `<repo>/<app>/` to `${XDG_CONFIG_HOME:-~
 Exceptions:
 
 - `copilot` links to `~/.copilot`
-- `ssh` links to `~/.ssh`
+- `ssh` syncs only `ssh/config` to `~/.ssh/config` (keeps keys and known_hosts untouched)
 
 ### SSH Config
 
@@ -413,7 +437,9 @@ SSH hosts are managed in `ssh/config` in this repository.
 ./init.sh ssh
 ```
 
-This symlinks the repo `ssh/` directory to `~/.ssh` so host aliases (for example `testing` and `openclaw-test`) stay versioned and consistent across machines.
+This links only `ssh/config` from the repo to `~/.ssh/config` so host aliases (for example `testing` and `openclaw-test`) stay versioned and consistent across machines.
+
+Other files in `~/.ssh` (such as private keys and `known_hosts`) are intentionally not managed by this repo.
 
 If the destination already exists and isn't the desired symlink, it is moved aside to `*.bak.<timestamp>`.
 
@@ -453,6 +479,16 @@ AstroNvim config lives in `nvim/` and is linked as your Neovim config:
 ```bash
 ./init.sh nvim
 ```
+
+On Windows PowerShell:
+
+```powershell
+.\init.ps1 nvim
+```
+
+`init.ps1` will initialize the `nvim` git submodule first (when declared in `.gitmodules`), then link it into your Neovim config directory.
+
+`init.sh` now follows the same behavior: it initializes the `nvim` git submodule first (when declared in `.gitmodules`), then links it.
 
 This creates a symlink from `nvim/` to `${XDG_CONFIG_HOME:-~/.config}/nvim`.
 

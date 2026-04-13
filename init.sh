@@ -12,9 +12,10 @@ This creates a symlink from this repo's <app>/ to $XDG_CONFIG_HOME/<app>
 (or ~/.config/<app> if XDG_CONFIG_HOME is not set).
 Exceptions:
   - for 'copilot', the link target is ~/.copilot
-  - for 'ssh', the link target is ~/.ssh
+  - for 'ssh', sync only ssh/config -> ~/.ssh/config
   - for 'git', symlink git/.gitconfig -> ~/.gitconfig and
     git/.gitignore_global -> ~/.gitignore_global
+  - for 'nvim', initializes git submodule nvim/ first (if declared)
 Special behavior for 'zsh':
   - ensures Oh My Zsh is installed (unattended)
   - clones common custom plugins under $ZSH_CUSTOM/plugins
@@ -93,6 +94,37 @@ check_git_delta_installed() {
 
 	log_warn "warn: git-delta is not installed"
 	echo "hint: install it with: brew install git-delta" >&2
+}
+
+ensure_submodule_ready() {
+	local repo_dir="$1"
+	local submodule_path="$2"
+	local gitmodules_file="$repo_dir/.gitmodules"
+
+	if [[ ! -f "$gitmodules_file" ]]; then
+		return 0
+	fi
+
+	if ! awk -F'=' -v path="$submodule_path" '
+		$1 ~ /^[[:space:]]*path[[:space:]]*$/ {
+			gsub(/^[[:space:]]+|[[:space:]]+$/, "", $2)
+			if ($2 == path) found = 1
+		}
+		END { exit(found ? 0 : 1) }
+	' "$gitmodules_file"; then
+		return 0
+	fi
+
+	if ! command -v git >/dev/null 2>&1; then
+		echo "error: git is required to initialize submodule '$submodule_path', but it was not found in PATH" >&2
+		exit 2
+	fi
+
+	echo "syncing submodule: $submodule_path"
+	if ! git -C "$repo_dir" submodule update --init --recursive -- "$submodule_path"; then
+		echo "error: failed to initialize submodule '$submodule_path'" >&2
+		exit 2
+	fi
 }
 
 extract_installation_id() {
@@ -277,6 +309,10 @@ if [[ "$app" == "rime" ]]; then
 	exit 0
 fi
 
+if [[ "$app" == "nvim" ]]; then
+	ensure_submodule_ready "$script_dir" "nvim"
+fi
+
 if [[ "$app" == "git" ]]; then
 	gitconfig_src="${script_dir}/git/.gitconfig"
 	gitignore_src="${script_dir}/git/.gitignore_global"
@@ -292,6 +328,21 @@ if [[ "$app" == "git" ]]; then
 	exit 0
 fi
 
+if [[ "$app" == "ssh" ]]; then
+	ssh_config_src="${script_dir}/ssh/config"
+	ssh_dir_dest="$HOME/.ssh"
+	ssh_config_dest="$ssh_dir_dest/config"
+
+	if [[ ! -f "$ssh_config_src" ]]; then
+		echo "error: ssh config not found at: $ssh_config_src" >&2
+		exit 2
+	fi
+
+	mkdir -p "$ssh_dir_dest"
+	link_path "$ssh_config_src" "$ssh_config_dest"
+	exit 0
+fi
+
 src="${script_dir}/${app}"
 
 if [[ ! -d "$src" ]]; then
@@ -301,8 +352,6 @@ fi
 
 if [[ "$app" == "copilot" ]]; then
 	dest="$HOME/.copilot"
-elif [[ "$app" == "ssh" ]]; then
-	dest="$HOME/.ssh"
 else
 	config_home="${XDG_CONFIG_HOME:-$HOME/.config}"
 	dest="${config_home}/${app}"
