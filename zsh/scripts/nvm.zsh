@@ -48,5 +48,5 @@ for _cmd in nvm node npm npx corepack; do
   eval "${_cmd}() { _nvm_lazy_cmd ${_cmd} \"\$@\"; }"
 done
 
-unset _brew_prefix _nvm_sh _nvm_bash_completion
+unset _brew_prefix
 unset _cmd
