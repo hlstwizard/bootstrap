@@ -9,6 +9,7 @@
   defaultBranch = main
 [pull]
   rebase = false
+	recurseSubmodules = true
 [fetch]
   prune = true
 [rebase]
@@ -24,3 +25,5 @@
 [delta]
   navigate = true
   dark = true
+[clone]
+	recurseSubmodules = true
