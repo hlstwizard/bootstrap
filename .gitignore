@@ -21,5 +21,15 @@ ssh/*
 !ssh/config
 
 # raycast
-raycast/ai/**
 raycast/extensions/**
+raycast/config.json
+
+# Node / npm / nvm
+node_modules/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+.npm/
+.nvm/
+.node_repl_history
