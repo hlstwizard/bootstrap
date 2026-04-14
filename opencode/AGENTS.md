@@ -31,7 +31,7 @@ When mixing languages, keep the surrounding explanation in Chinese and preserve 
 - Prefer editing existing files over rewriting whole files.
 - After changes, report impact scope with concrete file paths and behavior changes.
 - If behavior or usage changes, update related docs/examples in the same task.
-- Apply TAOUP philosophy from `rules/taoup.md` as the default programming approach.
+- Apply TAOUP philosophy from `rules/core/10-taoup.md` as the default programming approach.
 
 ## Safety Boundaries
 
