@@ -24,6 +24,9 @@ typeset -U path PATH
 if [[ -d "$HOME/.local/bin" ]]; then
   path=("$HOME/.local/bin" $path)
 fi
+if [[ -d "/opt/homebrew/opt/libpq/bin" ]]; then
+  path=("/opt/homebrew/opt/libpq/bin" $path)
+fi
 if [[ -d "$HOME/.local/share/nvim/mason/bin" ]]; then
   path=("$HOME/.local/share/nvim/mason/bin" $path)
 fi
