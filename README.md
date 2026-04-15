@@ -127,6 +127,28 @@ Optional env overrides:
 - `SSH_AGENT_ENV_FILE`: override agent env file path
 - `SSH_AGENT_AUTO_KEYS`: explicit key list string (shell words)
 
+macOS SOCKS5 proxy helper is also included in `zsh/scripts/socks5-proxy.zsh`:
+
+- command: `s5proxy <on|off|status|dns-status>`
+- server: `192.168.0.201:7893` (preconfigured)
+- target network service: Wi-Fi only (set `MAC_SOCKS5_PROXY_SERVICE` to override)
+- credentials from env vars (required for `on`):
+  - `MAC_SOCKS5_PROXY_USER`/`MAC_SOCKS5_PROXY_PASS` (or `SOCKS5_PROXY_USER`/`SOCKS5_PROXY_PASS`)
+- optional DNS override while proxy is on (restored on `off`):
+  - default is proxy host itself (`192.168.0.201`)
+  - override with `MAC_SOCKS5_PROXY_DNS_SERVERS` (space-separated), e.g. `"1.1.1.1 8.8.8.8"`
+- if macOS shows `error -25299`, it means the same proxy credential already exists in Keychain and can be safely ignored
+
+Example:
+
+```bash
+export MAC_SOCKS5_PROXY_USER="your-user"
+export MAC_SOCKS5_PROXY_PASS="your-pass"
+# Optional: force DNS while proxy is enabled
+# export MAC_SOCKS5_PROXY_DNS_SERVERS="1.1.1.1 8.8.8.8"
+s5proxy on
+```
+
 ## Input Method (Rime / Squirrel)
 
 1. Install [Squirrel](https://rime.im/) via Homebrew (included in `brewfiles/macos.Brewfile`) or manually.
