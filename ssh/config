@@ -31,6 +31,7 @@ IdentityFile ~/.ssh/hlstwizard
 Host mac-mini
 HostName 192.168.0.49
 User huangyiming
+IdentityFile ~/.ssh/hlstwizard
 
 Host compute
 HostName compute

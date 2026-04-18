@@ -493,6 +493,7 @@ Example: OpenCode
 OpenCode configuration lives in `opencode/`.
 
 - `opencode/AGENTS.md`: default agent instructions (copied from `~/AGENTS.md`).
+- `opencode/opencode.json`: includes `superpowers@git+https://github.com/obra/superpowers.git` in `plugin`, so skills auto-install on OpenCode restart.
 
 ### AstroNvim (Neovim)
 
